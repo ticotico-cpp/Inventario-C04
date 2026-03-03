@@ -7,14 +7,13 @@ Luigi Galina Di Lazzaro - 2317
 */
 #include <iostream>
 #include <string>
-#include <Windows.h>
+#include <clocale>
 
 using namespace std;
 
 int main() {
     char cmd;
-    SetConsoleOutputCP(CP_UTF8);
-    SetConsoleCP(CP_UTF8);
+    setlocale(LC_ALL, "pt_BR.UTF-8");
     string inicio = "Olá! Bem vindo ao sistema de gerenciamento de itens mágicos! Escolha uma opção:\na. Inserir item;\nb. Cadastrar similaridade entre itens;\nc. Buscar itens similares;\nd. Verificar a existência de um item;\ne. Listar itens (ordem alfabética de nome);\nf. Listar itens (ordem decrescente de raridade);\ng. Contar itens com mesma propriedade mágica;\nh. Remover itens menos raros;\nx. Sair do programa.\nEscolha: ";
     while(cout << inicio && cin >> cmd) {
         switch (cmd) {
