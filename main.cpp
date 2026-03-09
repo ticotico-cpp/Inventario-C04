@@ -4,6 +4,7 @@ Lucas Vasconcelos Castro - 747
 Lucas Caixeta Generoso - 669
 Lucas Kazue da Silva Hokari - 2309
 Luigi Galina Di Lazzaro - 2317
+Bruno Fonseca - 2276
 */
 #include <iostream>
 #include <string>
