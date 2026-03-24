@@ -9,6 +9,7 @@ Bruno Fonseca - 2276
 #include <iostream>
 #include <string>
 #include <clocale>
+#include <list>
 
 using namespace std;
 
@@ -18,7 +19,9 @@ struct item {
     string dono;
     string propriedade_magica;
     int raridade;
-    
+};
+struct Aresta {
+    int origem, destino, similaridade;
 };
 void inserir_item(item itens[], int &quantidade) {
     if (quantidade >= 100) {
@@ -26,16 +29,28 @@ void inserir_item(item itens[], int &quantidade) {
         return;
     }
     item novo;
-    novo.id = quantidade + 1;
-    cout << "Nome: "; cin >> novo.nome;
-    cout << "Dono: "; cin >> novo.dono;
+    novo.id = quantidade;
+    cout << "\nItem ID " << novo.id << ":" << endl;
+    cout << "Nome: "; getline(cin>>ws, novo.nome);
+    cout << "Dono: "; getline(cin>>ws, novo.dono);
     cout << "Raridade: "; cin >> novo.raridade;
-    cout << "Propriedade: "; cin >> novo.propriedade_magica;
+    cout << "Propriedade: "; getline(cin>>ws, novo.propriedade_magica);
     itens[quantidade++] = novo;
-    cout << "Item inserido com sucesso!" << endl;
+    cout << "\nItem inserido com sucesso!\n";
 }
-void cadastrar_similaridade() {
-    cout << "Função em construção" << endl;
+void cadastrar_similaridade(list<Aresta> grafo[], int quantidade, item itens[]) {
+    Aresta novo;
+    cout << "\nID  Nome           Dono  Raridade  Propriedade" << endl;
+    for(int i=0; i<quantidade; i++) {
+        cout << "-------------------------------------------------------------" << endl;
+        cout << itens[i].id << "   " << itens[i].nome << "   " << itens[i].dono << "  " << itens[i].raridade << "        " << itens[i].propriedade_magica << endl;
+    }
+    cout << "-------------------------------------------------------------" << endl;
+    cout << "\nItem 1: "; cin >> novo.origem;
+    cout << "Item 2: "; cin >> novo.destino;
+    cout << "Similaridade: "; cin >> novo.similaridade;
+    grafo[novo.origem].push_back(novo);
+    cout << "Similaridade adicionada com sucesso!" << endl;
 }
 void buscar_itens_similares() {
     cout << "Função em construção" << endl;
@@ -60,15 +75,17 @@ int main() {
     char cmd;
     item itens[100];
     int quantidade = 0;
+    list<Aresta> grafo[100];
     setlocale(LC_ALL, "pt_BR.UTF-8");
-    string inicio = "Olá! Bem vindo ao sistema de gerenciamento de itens mágicos! Escolha uma opção:\na. Inserir item;\nb. Cadastrar similaridade entre itens;\nc. Buscar itens similares;\nd. Verificar a existência de um item;\ne. Listar itens (ordem alfabética de nome);\nf. Listar itens (ordem decrescente de raridade);\ng. Contar itens com mesma propriedade mágica;\nh. Remover itens menos raros;\nx. Sair do programa.\nEscolha: ";
+    string inicio = "\n\nOlá! Bem vindo ao sistema de gerenciamento de itens mágicos! Escolha uma opção:\na. Inserir item;\nb. Cadastrar similaridade entre itens;\nc. Buscar itens similares;\nd. Verificar a existência de um item;\ne. Listar itens (ordem alfabética de nome);\nf. Listar itens (ordem decrescente de raridade);\ng. Contar itens com mesma propriedade mágica;\nh. Remover itens menos raros;\nx. Sair do programa.\nEscolha: ";
+    cout << endl;
     while(cout << inicio && cin >> cmd) {
         switch (cmd) {
             case 'a':
                 inserir_item(itens, quantidade);
                 break;
             case 'b':
-                cadastrar_similaridade();
+                cadastrar_similaridade(grafo, quantidade, itens);
                 break;
             case 'c':
                 buscar_itens_similares();
