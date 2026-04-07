@@ -40,10 +40,14 @@ void inserir_item(item itens[], int &quantidade) {
 }
 void cadastrar_similaridade(list<Aresta> grafo[], int quantidade, item itens[]) {
     Aresta novo;
-    cout << "\nID  Nome           Dono  Raridade  Propriedade" << endl;
+    cout << "\nID | Nome | Dono | Raridade | Propriedade" << endl;
+    if (quantidade == 0) {
+        cout << "\nNenhum item cadastrado.\n";
+        return;
+    }
     for(int i=0; i<quantidade; i++) {
         cout << "-------------------------------------------------------------" << endl;
-        cout << itens[i].id << "   " << itens[i].nome << "   " << itens[i].dono << "  " << itens[i].raridade << "        " << itens[i].propriedade_magica << endl;
+        cout << itens[i].id << " | " << itens[i].nome << " | " << itens[i].dono << " | " << itens[i].raridade << " | " << itens[i].propriedade_magica << endl;
     }
     cout << "-------------------------------------------------------------" << endl;
     cout << "\nItem 1: "; cin >> novo.origem;
@@ -52,8 +56,52 @@ void cadastrar_similaridade(list<Aresta> grafo[], int quantidade, item itens[]) 
     grafo[novo.origem].push_back(novo);
     cout << "Similaridade adicionada com sucesso!" << endl;
 }
-void buscar_itens_similares() {
-    cout << "Função em construção" << endl;
+void buscar_itens_similares(list<Aresta> grafo[], int quantidade, item itens[]) {
+    int codigo, x;
+    string jogador;
+    bool encontrou = false;
+
+    if (quantidade == 0) {
+        cout << "\nNenhum item cadastrado.\n";
+        return;
+    }
+
+    cout << "\nDigite o código do item de referência: ";
+    cin >> codigo;
+
+    if (codigo < 0 || codigo >= quantidade) {
+        cout << "Código inválido!\n";
+        return;
+    }
+
+    cout << "Digite o nome do jogador que deve ser ignorado: ";
+    getline(cin >> ws, jogador);
+
+    cout << "Digite o valor mínimo de similaridade X: ";
+    cin >> x;
+
+    cout << "\nItens similares ao item " << codigo
+         << " com similaridade maior que " << x
+         << " e que nao pertencem a " << jogador << ":\n";
+
+    for (list<Aresta>::iterator it = grafo[codigo].begin(); it != grafo[codigo].end(); it++) {
+        int destino = it->destino;
+
+        if (it->similaridade > x && itens[destino].dono != jogador) {
+            cout << "----------------------------------------\n";
+            cout << "ID: " << itens[destino].id << endl;
+            cout << "Nome: " << itens[destino].nome << endl;
+            cout << "Dono: " << itens[destino].dono << endl;
+            cout << "Raridade: " << itens[destino].raridade << endl;
+            cout << "Propriedade: " << itens[destino].propriedade_magica << endl;
+            cout << "Similaridade: " << it->similaridade << endl;
+            encontrou = true;
+        }
+    }
+
+    if (!encontrou) {
+        cout << "Nenhum item encontrado com esses critérios.\n";
+    }
 }
 void verificar_existencia_item() {
     cout << "Função em construção" << endl;
@@ -88,7 +136,7 @@ int main() {
                 cadastrar_similaridade(grafo, quantidade, itens);
                 break;
             case 'c':
-                buscar_itens_similares();
+                buscar_itens_similares(grafo, quantidade, itens);
                 break;
             case 'd':
                 verificar_existencia_item();
