@@ -54,6 +54,7 @@ void cadastrar_similaridade(list<Aresta> grafo[], int quantidade, item itens[]) 
     cout << "Item 2: "; cin >> novo.destino;
     cout << "Similaridade: "; cin >> novo.similaridade;
     grafo[novo.origem].push_back(novo);
+    grafo[novo.destino].push_back({novo.destino, novo.origem, novo.similaridade});
     cout << "Similaridade adicionada com sucesso!" << endl;
 }
 void buscar_itens_similares(list<Aresta> grafo[], int quantidade, item itens[]) {
