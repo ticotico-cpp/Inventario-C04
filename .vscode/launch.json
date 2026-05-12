@@ -2,17 +2,22 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Debug (Linux/GDB)",
+            "name": "C++: Build and Debug (UCRT64)",
             "type": "cppdbg",
             "request": "launch",
-            // Ajuste o caminho do executável conforme seu projeto
-            "program": "${fileDirname}/${fileBasenameNoExtension}",
+            "program": "${fileDirname}\\${fileBasenameNoExtension}.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
-            "environment": [],
+            "environment": [
+                {
+                    "name": "PATH",
+                    "value": "C:\\msys64\\ucrt64\\bin;${env:PATH}"
+                }
+            ],
             "externalConsole": false,
             "MIMode": "gdb",
+            "miDebuggerPath": "C:/msys64/ucrt64/bin/gdb.exe",
             "setupCommands": [
                 {
                     "description": "Enable pretty-printing for gdb",
@@ -20,18 +25,8 @@
                     "ignoreFailures": true
                 }
             ],
-            "miDebuggerPath": "/usr/bin/gdb"
+            "preLaunchTask": "C/C++: g++.exe build active file"
         },
-        {
-            "name": "Debug (Windows/MSVC)",
-            "type": "cppvsdbg",
-            "request": "launch",
-            "program": "${fileDirname}/${fileBasenameNoExtension}.exe",
-            "args": [],
-            "stopAtEntry": false,
-            "cwd": "${fileDirname}",
-            "environment": [],
-            "console": "externalTerminal"
-        }
+        
     ]
 }

@@ -13,6 +13,7 @@ Bruno Fonseca - 2276
 
 using namespace std;
 
+
 struct item {
     int id;
     string nome;
@@ -20,9 +21,73 @@ struct item {
     string propriedade_magica;
     int raridade;
 };
+struct node{
+  item item;
+  struct node * left;
+  struct node * right;
+};
 struct Aresta {
     int origem, destino, similaridade;
 };
+node * root = NULL;
+void insert_abb(node * & current, item newItem){
+    if(current == NULL){
+        current = new node;
+        current->item = newItem;
+        current->left = NULL;
+        current->right = NULL;
+    } else if( newItem.nome < current->item.nome ){
+        insert_abb(current->left, newItem);
+    } else {
+        insert_abb(current->right, newItem);
+    }
+}
+node * find_less_save_right(node * & current) {
+  if(current->left != NULL) {
+    return find_less_save_right(current->left);
+  } else {
+    node * copy = current;
+    current = current->right;
+    return copy;
+  }
+}
+bool remove_abb(node * & current, item data){
+  if(current == NULL){
+    return false;
+  } else if(data.id == current->item.id){
+    node * temp = current;
+    if (current->right == NULL) {
+      current = current->left;
+    } else if (current->left == NULL) {
+      current = current->right;
+    } else {
+      temp = find_less_save_right(current->right);
+      current->item = temp->item;
+    }
+    delete(temp);
+    return true;
+  } else {
+    if(data.id < current->item.id){
+      return remove_abb(current->left, data);
+    } else {
+      return remove_abb(current->right, data);
+    }
+  }
+}
+node * search_abb(node * current, string nome){
+
+    if(current == NULL){
+        return NULL;
+    } else if(nome == current->item.nome){
+        return current;
+    } else {
+        if(nome < current->item.nome){
+        return search_abb(current->left, nome);
+        } else {
+        return search_abb(current->right, nome);
+        }
+    }
+}
 void inserir_item(item itens[], int &quantidade) {
     if (quantidade >= 100) {
         cout << "Inventário cheio!" << endl;
@@ -36,6 +101,7 @@ void inserir_item(item itens[], int &quantidade) {
     cout << "Raridade: "; cin >> novo.raridade;
     cout << "Propriedade: "; getline(cin>>ws, novo.propriedade_magica);
     itens[quantidade++] = novo;
+    insert_abb(root, novo);
     cout << "\nItem inserido com sucesso!\n";
 }
 void cadastrar_similaridade(list<Aresta> grafo[], int quantidade, item itens[]) {
@@ -104,12 +170,31 @@ void buscar_itens_similares(list<Aresta> grafo[], int quantidade, item itens[]) 
         cout << "Nenhum item encontrado com esses critérios.\n";
     }
 }
-void verificar_existencia_item() {
-    cout << "Função em construção" << endl;
+void verificar_existencia_item(string nome) {
+    node * resultado = search_abb(root, nome);
+    if (resultado != NULL) {
+        cout << "\nItem encontrado!" << endl;
+        cout << "ID: " << resultado->item.id << endl;
+        cout << "Nome: " << resultado->item.nome << endl;
+        cout << "Dono: " << resultado->item.dono << endl;
+        cout << "Raridade: " << resultado->item.raridade << endl;
+        cout << "Propriedade: " << resultado->item.propriedade_magica << endl;
+    } else {
+        cout << "\nItem não encontrado!" << endl;
+    }
 }
-void listar_itens() {
-    cout << "Função em construção" << endl;
+void listar_itens(node * current) {
+  if (current != NULL) {
+    if (current->left != NULL) {
+      listar_itens(current->left);
+    }
+    cout << "\nID: " << current->item.id << ", nome: " << current->item.nome << "\nDono: " << current->item.dono << "\nRaridade: " << current->item.raridade << " Propriedade: " << current->item.propriedade_magica << endl;
+    if (current->right != NULL) {
+      listar_itens(current->right);
+    }
+  }
 }
+
 void listar_itens_raridade() {
     cout << "Função em construção" << endl;
 }
@@ -122,6 +207,7 @@ void remover_itens_raros() {
 
 int main() {
     char cmd;
+    string nome;
     item itens[100];
     int quantidade = 0;
     list<Aresta> grafo[100];
@@ -140,10 +226,12 @@ int main() {
                 buscar_itens_similares(grafo, quantidade, itens);
                 break;
             case 'd':
-                verificar_existencia_item();
+                cout << "\nDigite o nome do item a ser verificado: ";
+                getline(cin >> ws, nome);
+                verificar_existencia_item(nome);
                 break;
             case 'e':
-                listar_itens();
+                listar_itens(root);
                 break;
             case 'f':
                 listar_itens_raridade();
